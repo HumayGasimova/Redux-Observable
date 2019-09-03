@@ -11,6 +11,10 @@ import {
 } from 'react-redux';
 
 import {
+   bindActionCreators
+} from 'redux';
+
+import {
    Route,
    Switch,
    Redirect
@@ -20,81 +24,44 @@ import {
 * Components
 */
 
-import Toolbar from './components/Toolbar/toolbar';
-import PaperClipsGame from './components/PaperClipsGame/paperClipsGame';
 
 /**
 * Components
 */
 
 import './app.scss';
-
+import { fetchWhiskies } from './actions/exEpic';
+import ExampleGrid from './components/ExampleGrid/exampleGrid';
 /**
 * App component definition and export
 */
 
 export class App extends Component {
+   render() {
   
-   /**
-   * Methods
-   */
-
-   // renderRoutes = () => {
-   //     if(this.props.isAuthenticated){
-   //         return(
-   //             <div>
-   //                 <Switch>
-   //                     <Route 
-   //                         path="/tictactoe"
-   //                         component={ App3x3 }
-   //                     />
-   //                     <Route 
-   //                         path="/tictactoe4x4"
-   //                         component={ App4x4 }// render={props => <App4x4 {...props}/>}
-   //                     />
-   //                     <Route 
-   //                         exact 
-   //                         path="/"
-   //                         component={ Welcome }
-   //                     />
-   //                     <Redirect to="/"/>
-   //                 </Switch>
-   //             </div>
-   //         );
-   //     }else{
-   //         return(
-   //             <div>
-   //                 <Switch>
-   //                     <Route 
-   //                         exact 
-   //                         path="/"
-   //                         component={ Welcome }
-   //                         />
-   //                     <Redirect to="/"/>
-   //                 </Switch>
-   //             </div>
-   //         );
-   //     }
-   // }
-
-   /**
-   * Markup
-   */
-
-   render(){
-      return(
-            <div className="app">
-               <Toolbar/>
-               <PaperClipsGame/>
-            </div>
+      return (
+        <div className="App">
+          <button onClick={this.props.fetchWhiskies}>Fetch whiskies</button>
+          {this.props.isLoading && <h1>Fetching data</h1>}
+          {!this.props.isLoading && !this.props.error && <ExampleGrid whiskies={this.props.whiskies} />}
+          {this.props.error && <h1>{this.props.error}</h1>}
+        </div>
       );
-   }
+    }
 }
 
 export default connect(
    (state) => {
-      return {
-         //   isAuthenticated: state.auth.token !== null
-      };
+       return {
+         isLoading:state.epic.isLoading,
+         error:state.epic.error,
+         whiskies: state.epic.whiskies
+       };
+   },
+   (dispatch) => {
+       return {
+         fetchWhiskies: bindActionCreators(fetchWhiskies, dispatch),
+      
+       };
    }
 )(App);

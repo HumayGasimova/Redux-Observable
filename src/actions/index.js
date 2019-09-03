@@ -7,6 +7,6 @@ export {
     sellPaperclips
 } from './businessActions';
 
-export {
-    ping
-} from './exEpic';
+// export {
+//     ping
+// } from './exEpic';
